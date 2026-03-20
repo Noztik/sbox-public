@@ -1130,7 +1130,7 @@ public partial class SceneNetworkSystem : GameNetworkSystem
 		if ( !source.IsHost && source.Id != obj._net.Owner )
 			return;
 
-		obj._net.OnNetworkTableMessage( message );
+		obj._net.OnNetworkTableMessage( message, source );
 	}
 
 	private void OnObjectDetach( ObjectDetachMsg message, Connection source, Guid msgId )
