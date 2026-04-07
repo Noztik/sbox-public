@@ -51,21 +51,6 @@ public partial class Texture
 		return LoadInternal( filesystem, filepath, warnOnMissing );
 	}
 
-
-	private static bool IsLikelyRemoteOrDataUri( string filepath )
-	{
-		if ( filepath.StartsWith( "http://", System.StringComparison.OrdinalIgnoreCase ) )
-			return true;
-
-		if ( filepath.StartsWith( "https://", System.StringComparison.OrdinalIgnoreCase ) )
-			return true;
-
-		if ( filepath.StartsWith( "data:", System.StringComparison.OrdinalIgnoreCase ) )
-			return true;
-
-		return false;
-	}
-
 	/// <summary>
 	/// All the helpers should flow through this to actually load
 	/// </summary>
@@ -79,7 +64,7 @@ public partial class Texture
 		if ( Sandbox.Mounting.Directory.TryLoad( filepath, ResourceType.Texture, out object model ) && model is Texture m )
 			return m;
 
-		if ( !IsLikelyRemoteOrDataUri( filepath ) )
+		if ( !TextureLoader.ImageUrl.IsAppropriate( filepath ) && !TextureLoader.ImageDataUri.IsAppropriate( filepath ) )
 			filepath = filepath.NormalizeFilename( false );
 
 		if ( filepath.StartsWith( '/' ) )
@@ -278,7 +263,7 @@ public partial class Texture
 	{
 		if ( string.IsNullOrWhiteSpace( filepath ) ) return null;
 
-		if ( !IsLikelyRemoteOrDataUri( filepath ) )
+		if ( !TextureLoader.ImageUrl.IsAppropriate( filepath ) && !TextureLoader.ImageDataUri.IsAppropriate( filepath ) )
 			filepath = filepath.NormalizeFilename( false );
 
 		return Game.Resources.Get<Texture>( filepath );
